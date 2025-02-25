@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Pet Adoption Portal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffefba;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        header {
+            background: linear-gradient(to right, #ff6f61, #ff9068);
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        header nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        header nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        header nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            color: #333;
+        }
+
+        .button {
+            display: inline-block;
+            color: white;
+            background: linear-gradient(to right, #ff6f61, #ff9068);
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .button:hover {
+            background: linear-gradient(to right, #e65c54, #e6756a);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group button {
+            padding: 10px 20px;
+            background: linear-gradient(to right, #ff6f61, #ff9068);
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group button:hover {
+            background: linear-gradient(to right, #e65c54, #e6756a);
+        }
+        .user-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-card {
+            flex: 1 1 calc(33.333% - 20px);
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .user-card h3 {
+            margin: 0;
+            color: #333;
+        }
+
+        .user-card p {
+            margin: 10px 0;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            .user-card {
+                flex: 1 1 calc(50% - 20px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .user-card {
+                flex: 1 1 100%;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+    {% if user.is_staff %}
+    <div class="container">
+        <header>
+            <h1>Admin Dashboard</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="#manage-users">Manage Users</a></li>
+                    <li><a href="#manage-pets">Manage Pets</a></li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
+                </ul>
+            </nav>
+        </header>
+        <section id="manage-users">
+            <h2>Manage Users</h2>
+            <div class="user-container">
+                {% if Users %}
+                {% for user in Users %}
+                <div class="user-card">
+                    <h3>Name :- {{user.username}}</h3>
+                    <p>Email:- {{user.email}}</p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p>No user</p>
+                {% endif %}
+            </div>
+        </section>
+        <section id="manage-pets">
+            <h2>Manage Pets</h2>
+        <form action="{% url 'udashboard' %}" method='post' enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="pet-name">Pet </label>
+                <input type="file" id="pet-name" name="pet_image" placeholder="Pet image">
+            </div>
+            <div class="form-group">
+                <label for="pet-name">Pet Name</label>
+                <input type="text" id="pet-name" name="pet_name" placeholder="Pet Name">
+            </div>
+            <div class="form-group">
+                <label for="pet-location">Pet Location</label>
+                <input type="text" id="pet-location" name="pet_location" placeholder="Pet Location">
+            </div>
+            <div class="form-group">
+                <label for="pet-breed">Pet Breed</label>
+                <input type="text" id="pet-breed" name="pet_breed" placeholder="Pet Breed">
+            </div>
+            <div class="form-group">
+                <label for="pet-description">Pet Description</label>
+                <textarea id="pet-description" name="pet_description" placeholder="Pet Description"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="button">Add Pet</button>
+            </div>
+        </form>
+        </section>
+    </div>
+    {% else %}
+    {% endif %}
+</body>
+</html>

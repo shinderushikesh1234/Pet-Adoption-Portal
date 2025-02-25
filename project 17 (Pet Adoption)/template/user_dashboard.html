@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User-Pet Adoption Portal</title>
+    <style>
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffefba;
+    margin: 0;
+    padding: 0;
+}
+.user-card {
+    flex: 1 1 calc(33.333% - 20px);
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+#view{
+    cursor:pointer;
+}
+.user-card h3 {
+    margin: 0;
+    color: #333;
+}
+
+.user-card p {
+    margin: 10px 0;
+    color: #666;
+}
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+header {
+    background-color: #ff6f61;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+header nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+section {
+    background-color: white;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    color: #333;
+}
+
+#pet-list, #search-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pet-card {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.pet-card img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+#search-form, #adoption-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#search-form input, #adoption-form input, #adoption-form textarea, #search-form button, #adoption-form button {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#search-form button, #adoption-form button  {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+#search-form button:hover, #adoption-form button:hover {
+    background-color: #e65c54;
+}
+#view {
+    background-color:#ff6f61;
+    color: white;
+    border-radius: 5px;
+    width: 120px;
+    height:30px;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Pet Adoption Portal</h1>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'home' %}">Home</a></li>
+                    <li><a href="#browse">Available Pets</a></li>
+                    <li><a href="#search">Search Pets</a></li>
+                    <li><a href="#adopt">Adopted Pet</a></li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
+                </ul>
+            </nav>
+        </header>
+        <section id="browse">
+            <h2>Available Pets</h2>
+            <div id="pet-list">
+                {% if pets %}
+                    {% for pet in pets %}
+                    <div class="user-card">
+                        <img src="{{pet.image.url}}" >
+                        <h3>Pet Name:-{{pet.Name}}</h3>
+                        <p>Location:-{{pet.Location}}</p>
+                        <p>Breed:-{{pet.Breed}}</p>
+                        <p>Description:-{{pet.description}}</p>
+                        <p>status:-{{pet.status}}</p>
+                        <a href="{% url 'Adopt' pk=pet.id %}"><button id="view">Adopt</button></a>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                <div class="user-card">
+                    <h3> NO pets </h3>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="search">
+            <h2>Search Pets</h2>
+            <form action="{% url 'dashboard' %}" method="POST">
+                {% csrf_token %}
+                <input type="text" id="breed" placeholder="Breed" name="breed">
+                <button type="submit" id="view">Search</button>
+            </form>
+            <br>
+            <br>
+            <div id="search-results">
+                <div id="pet-list">
+                    {% if search %}
+                        {% for pet in search %}
+                        <div class="user-card">
+                            <img src="{{pet.image.url}}" >
+                            <h3>Pet Name:-{{pet.Name}}</h3>
+                            <p>Location:-{{pet.Location}}</p>
+                            <p>Breed:-{{pet.Breed}}</p>
+                            <p>Description:-{{pet.description}}</p>
+                            <p>status:-{{pet.status}}</p>
+                            <a href="{% url 'Adopt' pk=pet.id %}"><button id="view">Adopt</button></a></div>
+                        {% endfor %}
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+        <section id="adopt">
+            <h2>AdoptedPet</h2>
+            <div id="search-results">
+                <div id="pet-list">
+                    {% if Adopted %}
+                        {% for pet in Adopted %}
+                        <div class="user-card">
+                            <img src="{{pet.Pet.image.url}}" >
+                            <h3>Pet Name:-{{pet.Pet.Name}}</h3>
+                            <p>Location:-{{pet.Pet.Location}}</p>
+                            <p>Breed:-{{pet.Pet.Breed}}</p>
+                            <p>Description:-{{pet.Pet.description}}</p>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <p> NO pet adopted</p>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
